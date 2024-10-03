@@ -1,0 +1,69 @@
+import csv
+
+# Sample data mimicking the bank-data.csv content for demonstration purposes.
+sample_data = [
+    {'age': 34, 'job': 'admin'},
+    {'age': 28, 'job': 'technician'},
+    {'age': 45, 'job': 'management'},
+    {'age': 22, 'job': 'student'},
+    {'age': 52, 'job': 'retired'},
+    {'age': 37, 'job': 'technician'},
+    {'age': 29, 'job': 'admin'},
+    {'age': 46, 'job': 'management'},
+    {'age': 24, 'job': 'student'},
+    {'age': 31, 'job': 'technician'}
+]
+
+def read_data():
+    """Reads the hypothetical data and returns a set of unique professions and a dictionary for min and max ages per profession."""
+    profession_set = set()
+    age_dict = {}
+
+    # Simulating reading from a file with sample_data.
+    for row in sample_data:
+        profession = row['job'].strip().lower()
+        age = int(row['age'])
+
+        # Add profession to the set
+        profession_set.add(profession)
+
+        # Set min and max ages for each profession
+        if profession not in age_dict:
+            age_dict[profession] = {'min_age': age, 'max_age': age}
+        else:
+            age_dict[profession]['min_age'] = min(age_dict[profession]['min_age'], age)
+            age_dict[profession]['max_age'] = max(age_dict[profession]['max_age'], age)
+
+    return profession_set, age_dict
+
+def check_eligibility(profession, profession_set):
+    """Checks if a given profession is in the set of eligible professions."""
+    if profession.strip().lower() in profession_set:
+        return True
+    return False
+
+def main():
+    # Read the data and get the set of professions and age dictionary
+    profession_set, age_dict = read_data()
+
+    while True:
+        # Input from user
+        profession_input = input("Enter the client's profession (or type 'END' to stop): ").strip()
+
+        # End the program if user types 'END'
+        if profession_input.upper() == "END":
+            print("Exiting the program.")
+            break
+
+        # Check eligibility
+        if check_eligibility(profession_input, profession_set):
+            print(f"The client with profession '{profession_input}' is eligible for the campaign.")
+            # Display the min and max age for the profession
+            profession_key = profession_input.strip().lower()
+            if profession_key in age_dict:
+                print(f"Eligible age range for this profession: {age_dict[profession_key]['min_age']} - {age_dict[profession_key]['max_age']}")
+        else:
+            print(f"The client with profession '{profession_input}' is not eligible for the campaign.")
+
+if __name__ == "__main__":
+    main()
